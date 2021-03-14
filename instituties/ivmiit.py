@@ -14,7 +14,7 @@ def get_link_from_button(url,button_name):
         if tag_a.text == button_name:
             return tag_a.get('href')
 
-def get_name_link_of_cathedras_ivmiit(url):
+def get_cathedras(url):
     site = urlopen(url)
     soup = bs(site,'html.parser')
 
@@ -32,7 +32,7 @@ def get_name_link_of_cathedras_ivmiit(url):
             cathedras.append((tag_a.text, tag_a.get('href')))
     return cathedras
 
-def get_name_link_of_teachers(url):
+def get_stuff(url):
     site = urlopen(url)
     soup = bs(site,'html.parser')
 
@@ -54,7 +54,7 @@ def get_name_link_of_teachers(url):
 
 def parse_ivmiit(url):
     info_button_url = get_link_from_button(url,'Об институте')
-    cathedras = get_name_link_of_cathedras_ivmiit(info_button_url)
+    cathedras = get_cathedras(info_button_url)
 
     res = {}
 
@@ -63,7 +63,7 @@ def parse_ivmiit(url):
         res[name] = stuff_url
 
     for name, url in res.items():
-        res[name] = len(get_name_link_of_teachers(url))
+        res[name] = len(get_stuff(url))
 
     return res
 

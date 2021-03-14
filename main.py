@@ -1,55 +1,50 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as bs
 import config
-from instituties import *
+from instituties import ivmiit, buisness, chemistry, ecology, engineer, imo, law, mehmat, philology, physics, psychology
 
 
-
-def get_name_link_of_institutes(url):
+def get_instituties(url):
     site = urlopen(url)
     soup = bs(site, 'html.parser')
 
-    ul = soup.find_all('ul', class_='menu_list')[:2]
+    ul = soup.find_all('ul', class_='menu_list')[:1]
     lis = ul[0].find_all('li', class_='li_spec')
-    lis += ul[1].find_all('li', class_='li_spec')
 
-    institutes = [(li.find('a').text, li.find('a').get('href')) for li in lis]
+    institutes = [(li.find('a').text, li.find('a').get('href')) for li in lis[:-10]]
 
     return institutes
 
-#
-# def main():
-#     parsing_dictionary = {
-#         'Институт экологии и природопользования': parse_ecology,
-#         'Институт геологии и нефтегазовых технологий': None,
-#         'Институт математики и механики им. Н.И. Лобачевского': parse_mehmat,
-#         'Институт физики': parse_physics,
-#         'Химический институт им. А.М. Бутлерова': parse_chemistry,
-#         'Юридический факультет': parse_law,
-#         'Институт вычислительной математики и информационных технологий': parse_ivmiit,
-#         'Институт филологии и межкультурной коммуникации': None,
-#         'Институт психологии и образования': parse_psychology,
-#         'Общеуниверситетская кафедра физического воспитания и спорта': None,
-#         'Институт информационных технологий и интеллектуальных систем': None,
-#         'Институт фундаментальной медицины и биологии': None,
-#         'Инженерный институт': parse_engineer,
-#         'Институт международных отношений': parse_imo,
-#         'Высшая школа бизнеса': parse_higher_school_buisness,
-#         'Институт социально-философских наук и массовых коммуникаций': None,
-#         'Институт управления, экономики и финансов': None,
-#         'Высшая школа государственного и муниципального управления': None,
-#         'Центр корпоративного обучения': None,
-#         'IT-лицей-интернат КФУ': parse_IT_licey,
-#         'Лицей имени Н.И.Лобачевского': parse_lobach_licey,
-#         'Подготовительный факультет для иностранных учащихся': None,
-#         'Приволжский центр повышения квалификации и профессиональной переподготовки работников образования': None,
-#         'Центр непрерывного повышения профессионального мастерства педагогических работников': None,
-#         'Медико-санитарная часть ФГАОУ ВО КФУ': None,
-#         'Центр цифровых трансформаций': None,
-#         'Институт передовых образовательных технологий': parse_ipot,
-#         'Набережночелнинский институт КФУ': parse_chill,
-#         'Елабужский институт КФУ': None}
-#
+
+def main():
+    instituties = get_instituties(config.basic_url)
+
+    parsing_funcs = {
+        'Институт экологии и природопользования': ecology.parse_ecology,
+        'Институт геологии и нефтегазовых технологий': None,
+        'Институт математики и механики им. Н.И. Лобачевского': mehmat.parse_mehmat,
+        'Институт физики': physics.parse_physics,
+        'Химический институт им. А.М. Бутлерова': chemistry.parse_chemistry,
+        'Юридический факультет': law.parse_law,
+        'Институт вычислительной математики и информационных технологий': ivmiit.parse_ivmiit,
+        'Институт филологии и межкультурной коммуникации': philology.parse_philology,
+        'Институт психологии и образования': psychology.parse_psychology,
+        'Общеуниверситетская кафедра физического воспитания и спорта': None,
+        'Институт информационных технологий и интеллектуальных систем': None,
+        'Институт фундаментальной медицины и биологии': None,
+        'Инженерный институт': engineer.parse_engineer,
+        'Институт международных отношений': imo.parse_imo,
+        'Высшая школа бизнеса': buisness.parse_buisness,
+        'Институт социально-философских наук и массовых коммуникаций': None,
+        'Институт управления, экономики и финансов': None,
+    }
+
+    data = {}
+    for name, url in instituties:
+        parse = parsing_funcs.get(name)
+        if parse:
+            data[name] = parse(url)
+    print(data)
 
 if __name__ == '__main__':
-    print('hi')
+    main()

@@ -55,4 +55,4 @@ def parse_psychology(url):
         res[name] = len(stuff)
     return res
 
-print(parse_psychology(url_psy))
+# print(parse_psychology(url_psy))

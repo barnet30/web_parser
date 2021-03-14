@@ -53,7 +53,8 @@ def get_stuff(url):
     else:
         select_list = soup.select('p a[href]')
         for i in select_list:
-            stuff.append((i.text, i.get('href')))
+            if i.text != 'КФУ' and not i.text.startswith('Институт'):
+                stuff.append((i.text, i.get('href')))
 
     return stuff
 
@@ -73,5 +74,4 @@ def parse_philology(url):
 
 
 # print(parse_philology(url_phyl))
-
 
