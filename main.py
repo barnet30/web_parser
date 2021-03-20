@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# !/usr/bin/env python
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as bs
 import config
@@ -44,6 +46,10 @@ def main():
         parse = parsing_funcs.get(name)
         if parse:
             data[name] = parse(url)
+
+    f = open('data.txt', 'w')
+    f.write(str(data))
+    f.close()
     print(data)
 
 if __name__ == '__main__':
